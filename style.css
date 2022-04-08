@@ -1,71 +1,73 @@
-body {
-	background-color: rgb(43, 43, 43);
-	color: aliceblue;
-}
-
-html {
-	font-size: 62.5%;
-	box-sizing: border-box;
-}
-
 *,
 *::before,
 *::after {
-	margin: 0;
-	padding: 0;
-	box-sizing: inherit;
+	box-sizing: border-box;
+	font-family: 'Inconsolata', monospace;
+	font-weight: 600;
 }
 
-.calculator {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 400px;
-	padding: 40px;
-	padding-top: 75px;
-	background-color: black;
-	border-radius: 25px;
+body {
+	font-size: 1.5em;
 }
 
-.calculator-screen {
-	width: 100%;
-	font-size: 5rem;
-	height: 80px;
-	border: none;
-	background-color: white;
-	color: black;
-	text-align: right;
-	padding-right: 10px;
+h3 {
+	font-weight: 400;
 }
 
-.calculator-buttons {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	padding: 15px;
-	padding-bottom: 5px;
+.calculator-grid {
+	display: grid;
+	justify-content: center;
+	align-content: center;
+	min-height: 100vh;
+	grid-template-columns: repeat(5, 80px);
+	grid-template-rows: minmax(120px, auto) repeat(4, 100px);
+	background-color: hsla(199, 38%, 69%, 0.589);
 }
 
 button {
-	height: 60px;
-	background-color: white;
+	background: none;
+	color: inherit;
 	border: none;
-	border-radius: 30px;
-	font-size: 4rem;
-	font-weight: bold;
-	color: black;
-	margin: 7px;
-	padding: 5px;
-	flex: 1 0 18%;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }
 
-button[value='AC'] {
-	background-color: red;
-	color: white;
-	font-size: 3rem;
+.calculator-grid > button {
+	border: 2px solid white;
+	background-color: #ffffff7e;
 }
 
-button:hover {
-	background-color: #808080;
+.calculator-grid > button:hover,
+.calculator-grid > button:active {
+	background-color: #ffffff;
+}
+
+button.number {
+	background-color: #f3f3f3d5;
+}
+
+button.operator,
+button.tools {
+	background-color: #d3d3d3d5;
+}
+
+#equals {
+	grid-column: span 2;
+}
+
+.output {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-around;
+	flex-direction: column;
+	word-wrap: break-word;
+	word-break: break-all;
+	padding: 10px;
+	background-color: rgba(125, 209, 248, 0.171);
+	border-top: 2px solid white;
+	border-left: 2px solid white;
+	border-right: 2px solid white;
 }

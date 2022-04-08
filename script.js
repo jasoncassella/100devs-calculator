@@ -1,65 +1,115 @@
-/*
-optional features:
-- should prevent invalid inputs (operators next to each other, two decimal points, etc.)
-*/
-
-const keys = document.querySelector('.calculator-buttons');
-keys.addEventListener('click', e => {
-	const { target } = e;
-	const { value } = target;
-	if (!target.matches('button')) return;
-	else caluclator.parseInput(value);
-});
-
-const caluclator = {
+const calculator = {
 	displayText: '0',
-	prevTotal: null,
+	displayValue: 0,
+	num1: undefined,
+	num2: undefined,
+	display: document.querySelector('#display'),
+	numbers: document.querySelectorAll('.number'),
+	operators: document.querySelectorAll('.operator'),
+	clear: document.querySelector('#clear'),
+	equals: document.querySelector('#equals'),
+	decimal: document.querySelector('#decimal'),
+	allClear: document.querySelector('#allClear'),
+	negate: document.querySelector('#negate'),
 
-	parseInput(value) {
-		switch (value) {
-			case '=':
-				this.calcAnswer(this.displayText);
-				break;
-			case 'AC':
-				this.clearAll();
-				break;
-			case '.':
-				if (this.displayText === '0') {
-					this.addText('0.');
-				} else {
-					this.addText(value);
-				}
-				break;
-			default:
-				this.addText(value);
+	operate(myOperator, a, b) {
+		switch (myOperator) {
+			case '+':
+				return this.add(a, b);
+			case '-':
+				return this.subtract(a, b);
+			case '×':
+				return this.multiply(a, b);
+			case '÷':
+				return this.divide(a, b);
 		}
 	},
 
-	addText(value) {
-		if (this.displayText === '0') this.displayText = '';
-		else if (this.prevTotal !== null) {
-			this.displayText = this.prevTotal;
-			this.prevTotal = null;
-		}
-		if (isNaN(+value) && isNaN(+this.displayText)) {
-			if (isNaN(this.displayText.slice(-1))) return;
-		}
-		this.displayText += value;
-		this.outputText(this.displayText);
+	add(a, b) {
+		let result = a + b;
+		display.textContent = this.overflowCheck(result);
+		displayValue = parseFloat(display.textContent);
 	},
 
-	outputText(text) {
-		document.querySelector('.calculator-screen').value = text;
+	subtract(a, b) {
+		let result = a - b;
+		display.textContent = this.overflowCheck(result);
+		displayValue = parseFloat(display.textContent);
 	},
 
-	calcAnswer(equation) {
-		let result = Function('return ' + equation)();
-		this.outputText(result);
+	multiply(a, b) {
+		let result = a * b;
+		display.textContent = this.overflowCheck(result);
+		displayValue = parseFloat(display.textContent);
 	},
 
-	clearAll() {
-		this.displayText = '0';
-		this.prevTotal = null;
-		this.outputText(this.displayText);
+	divide(a, b) {
+		if (b !== 0) {
+			let result = a / b;
+			display.textContent = this.overflowCheck(result);
+			displayValue = parseFloat(display.textContent);
+		} else display.textContent = 'you mothafucka';
+	},
+
+	overflowCheck(number) {
+		if (number.toString().length > 6) return number.toFixed(6);
+		else return number;
 	},
 };
+
+calculator.numbers.forEach(number => {
+	number.addEventListener('click', e => {
+		if (display.textContent !== '0') {
+			display.textContent += e.target.textContent;
+		} else {
+			display.textContent = e.target.textContent;
+		}
+		displayValue = parseFloat(display.textContent);
+	});
+});
+
+calculator.operators.forEach(operator => {
+	operator.addEventListener('click', e => {
+		num1 = displayValue;
+		myOperator = e.target.textContent;
+		display.textContent = '0';
+		displayValue = 0;
+	});
+});
+
+calculator.clear.addEventListener('click', () => {
+	display.textContent = '0';
+	displayValue = 0;
+	num1 = 0;
+	num2 = 0;
+	myOperator = '';
+});
+
+calculator.allClear.addEventListener('click', () => {
+	display.textContent = '0';
+	displayValue = 0;
+	num1 = 0;
+	num2 = 0;
+	myOperator = '';
+});
+
+calculator.equals.addEventListener('click', () => {
+	if (!myOperator) return;
+	num2 = displayValue;
+	calculator.operate(myOperator, num1, num2);
+});
+
+calculator.negate.addEventListener('click', () => {
+	if (displayValue > 0) {
+		displayValue = 0 - displayValue;
+		display.textContent = `${displayValue}`;
+	} else if (displayValue < 0) {
+		displayValue = Math.abs(displayValue);
+		display.textContent = `${displayValue}`;
+	}
+});
+
+calculator.decimal.addEventListener('click', e => {
+	if (display.textContent.includes('.')) return;
+	display.textContent += e.target.textContent;
+});
